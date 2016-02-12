@@ -1,0 +1,46 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Your Cart</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function addRow(tableId, cells){
+                var tableElem = document.getElementById(tableId);
+                var newCell;
+                var col = 0;
+                var newRow;
+                for (var i = 0;i < cells.length-1; i++) {
+                    newRow = tableElem.insertRow(tableElem.rows.length);
+                    
+                    newCell = newRow.insertCell(newRow.cells.length);
+                    newCell.innerHTML = ++col;
+                    newCell = newRow.insertCell(newRow.cells.length);
+                    newCell.innerHTML = cells[i] + 
+                        '<input type="hidden" name="txtXPath" value="' + cells[i] + '"/>';
+                    //newCell.width = 200;
+                }
+                return newRow;
+            }
+            
+            function showCart(items, tableId){
+                var item = items.split(';');
+                addRow(tableId,item);
+            }
+        </script>
+    </head>
+    <body onload="showCart(sessionStorage.cart, 'tbItems')">
+        <form action="ScrappingServlet" method="POST">
+        <table id="tbItems" border="1">
+            <tr>
+                <th>No.</th>
+                <th>XPath</th>
+            </tr>
+        </table><br/>
+        <input type="submit" value="Parse" name="btnAction"/>
+        </form>
+    </body>
+</html>
