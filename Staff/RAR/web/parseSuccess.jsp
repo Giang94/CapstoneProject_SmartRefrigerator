@@ -4,6 +4,8 @@
     Author     : Dell
 --%>
 
+<%@page import="sample.pojo.content"%>
+<%@page import="java.util.List"%>
 <%@page import="java.util.ListIterator"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -17,7 +19,11 @@
     <body>
         <h1>Hello World!</h1>
         <%
-            ListIterator<String> result = (ListIterator<String>) request.getAttribute("LIST");
+            List<content> tmp = (List<content>) request.getAttribute("LIST");
+            ListIterator<content> result = null;
+            if (tmp != null) {
+                result = tmp.listIterator();
+            }
         %>
         <table border="1">
             <thead>
@@ -30,21 +36,27 @@
                 <%
                     int i = 0;
                     while (result.hasNext()) {
-                        String value = result.next();
+                        content value = result.next();
                         i++;
                 %>
+            <form action="insertServlet">
                 <tr>
-                    <td><%= (i + 1)%></td>
-                    <td><%= value%></td>
+                    <td><%= i%></td>
+                    <td><%= value.getKey()%> <input type="hidden" 
+                                                    name="<%= value.getKey()%>" value="<%= value.getValue()%>" /> 
+                    </td>
+                    <td><%= value.getValue()%></td>
                 </tr>
                 <%
                     }
                 %>
-            </tbody>
-        </table>
+                <input type="submit" value="INSERT" />
+            </form>
+        </tbody>
+    </table>
 
-    <c:if test="${not empty list}">
-        <c:out value="thien dept trai"/>
+    <c:if test="${empty list}">
+        <c:out value="EMPTY LIST"/>
     </c:if>
 </body>
 </html>

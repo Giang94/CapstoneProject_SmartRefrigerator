@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.CharUtils;
 
 /**
@@ -67,7 +68,6 @@ public class GetHTMLContentServlet extends HttpServlet {
             //Save file
             System.out.println("start save");
             String realPath = this.getServletContext().getRealPath("/");
-            System.out.println(realPath);
             String htmlFilePath = realPath + "/tmp.html";
             File file = new File(htmlFilePath);
 
@@ -81,7 +81,8 @@ public class GetHTMLContentServlet extends HttpServlet {
 
             //close the stream
             bwr.close();
-
+            HttpSession session = request.getSession();
+            session.setAttribute("URL", str);
             System.out.println("Content of StringBuffer written to File.");
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.forward(request, response);

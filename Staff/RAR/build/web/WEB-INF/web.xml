@@ -12,6 +12,10 @@
         <servlet-name>ScrappingServlet</servlet-name>
         <servlet-class>sample.Servlet.ScrappingServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>insertServlet</servlet-name>
+        <servlet-class>sample.Servlet.insertServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetHTMLContentServlet</servlet-name>
         <url-pattern>/GetHTMLContentServlet</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>ScrappingServlet</servlet-name>
         <url-pattern>/ScrappingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>insertServlet</servlet-name>
+        <url-pattern>/insertServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
