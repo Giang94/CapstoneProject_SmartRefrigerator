@@ -29,7 +29,8 @@
             <thead>
                 <tr>
                     <th>No.</th>
-                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Content</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,17 +38,18 @@
                     int i = 0;
                     while (result.hasNext()) {
                         content value = result.next();
-                        i++;
+                        if (!value.getValue().equals("")) {
+                            i++;
                 %>
             <form action="insertServlet">
                 <tr>
                     <td><%= i%></td>
-                    <td><%= value.getKey()%> <input type="hidden" 
-                                                    name="<%= value.getKey()%>" value="<%= value.getValue()%>" /> 
+                    <td><%= value.getKey()%> 
                     </td>
-                    <td><%= value.getValue()%></td>
+                    <td><input type="text" name="<%= value.getKey()%>" value="<%= value.getValue()%>" size="90"/></td>
                 </tr>
                 <%
+                        }
                     }
                 %>
                 <input type="submit" value="INSERT" />

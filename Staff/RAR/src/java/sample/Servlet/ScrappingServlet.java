@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -61,7 +60,7 @@ public class ScrappingServlet extends HttpServlet {
 
             //Connect to page
             //HtmlPage page = webClient.getPage(url);
-            //HtmlPage page = webClient.getPage("http://localhost:8080/RAR/tmp.html");
+
             String realPath = this.getServletContext().getRealPath("/");
             String htmlFilePath = realPath + "/tmp.html";
             File file = new File(htmlFilePath);

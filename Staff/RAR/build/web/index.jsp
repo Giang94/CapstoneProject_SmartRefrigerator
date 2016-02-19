@@ -21,7 +21,6 @@
                 var iframeDoc = document.getElementById('myframe').contentWindow ;
                 $(iframeDoc).click(function (event){
                     urlXPath=createXPathFromElement(event.target);
-                    getData(urlXPath);
                     alert("CONTENT: " + event.target.innerHTML + "\nXPATH: " + urlXPath);                                     
                     //addRow1('tbItems', cells)
                     //if(col%2 == 0) alert("thiendeptrai");
@@ -38,7 +37,7 @@
                         str2 = urlXPath;
                         //alert(sharedStart(str1, str2));
                         progressBar();
-                        addToCart(sharedStart(str1, str2));
+                        addToCart(commonXpath(str1, str2));
                         showCart(sessionStorage.cart, 'tbItems');
                     }
                     if (count == 7){
@@ -48,11 +47,13 @@
                 });
             });
             
-            function sharedStart(xpath1, xpath2){
-                var L = xpath1.length, i= 0;
-                while(i<L && xpath1.charAt(i)=== xpath2.charAt(i)) i++;
-                var tmp = xpath1.substring(i+2,L);
-                return xpath1.substring(0, i-1) + tmp;
+            function commonXpath(xpath1, xpath2){
+                var L1 = xpath1.length, L2 = xpath2.length, i= 0;
+                while(i<=L1 && xpath1.charAt(i)=== xpath2.charAt(i)) i++;
+                var j = i;
+                while(j<=L1 && xpath1.charAt(j)=== xpath2.charAt(j)) j++;
+                
+                return xpath1.substring(0, i-1) + xpath1.substring(i, j);
             }
             
             function progressBar() {
@@ -122,19 +123,6 @@
                 return rs;
             }; 
             
-            //Using AJAX call function
-            function getData(url) {
-                //alert("getData");
-                $.ajax({
-                    url: "GetElementContentServlet",
-                    type: "POST",
-                    data: { urlXPath: url }
-                    //                    success: function (result) {
-                    //                        alert(result.toString());
-                    //            }
-                });
-            }     
-            
             //Preview
             function addToCart(selectedItem) {
                 if(typeof(sessionStorage)!=="undefined") {
@@ -159,8 +147,8 @@
                     newCell = newRow.insertCell(newRow.cells.length);
                     newCell.innerHTML = ++col;
                     newCell = newRow.insertCell(newRow.cells.length);
-                    newCell.innerHTML = cells[i] + 
-                        '<input type="hidden" name="txtXPath" value="' + cells[i] + '"/>';
+                    newCell.innerHTML = 
+                        '<input type="text" name="txtXPath" value="' + cells[i] + '" size="78"/>';
                     //newCell.width = 200;
                 }
                 return newRow;
@@ -180,58 +168,59 @@
             
         </script>
 
-    </script>
-</head>
-<body>
-    <h1>Welcome to XPath + IFrame + JQuery!</h1>
-    <div class="progress">
-        <div class="circle done">
-            <span class="label">0</span>
-            <span class="title">Start</span>
+    </head>
+    <body>
+        <h1>Welcome to XPath + IFrame + JQuery!</h1>
+        <div class="progress">
+            <div class="circle done">
+                <span class="label">0</span>
+                <span class="title">Welcome</span>
+            </div>
+            <span class="bar half"></span>
+            <div class="circle active">
+                <span class="label">1</span>
+                <span class="title">RecipeName</span>
+            </div>
+            <span class="bar"></span>
+            <div class="circle">
+                <span class="label">2</span>
+                <span class="title">Introduction</span>
+            </div>
+            <span class="bar"></span>
+            <div class="circle">
+                <span class="label">3</span>
+                <span class="title">RecipeImage</span>
+            </div>
+            <span class="bar"></span>
+            <div class="circle">
+                <span class="label">4</span>
+                <span class="title">Material</span>
+            </div>
+            <span class="bar"></span>
+            <div class="circle">
+                <span class="label">5</span>
+                <span class="title">RecipeStep</span>
+            </div>
         </div>
-        <span class="bar half"></span>
-        <div class="circle active">
-            <span class="label">1</span>
-            <span class="title">RecipeName</span>
-        </div>
-        <span class="bar"></span>
-        <div class="circle">
-            <span class="label">2</span>
-            <span class="title">Introduction</span>
-        </div>
-        <span class="bar"></span>
-        <div class="circle">
-            <span class="label">3</span>
-            <span class="title">RecipeImage</span>
-        </div>
-        <span class="bar"></span>
-        <div class="circle">
-            <span class="label">4</span>
-            <span class="title">Material</span>
-        </div>
-        <span class="bar"></span>
-        <div class="circle">
-            <span class="label">5</span>
-            <span class="title">RecipeStep</span>
-        </div>
-    </div>
-    <p>
-        <b>Please Select An Element And Get XPath</b><br/>
+        <p>
+            <b>Please Select An Element And Get XPath</b><br/>
+            <input type="button" value="RESET" onclick="reset()"/>
+            <input type="button" value="HOME" onclick="window.location='welcome.html'"/>
 
-        <!--        <input type="button" value="Preview" onfocus="showCart(sessionStorage.cart, 'tbItems')" 
-                       onclick="window.open('show.html', null, null)"/><br/>-->
-        <input type="button" value="RESET" onclick="reset()"/>
-    <form name="myForm" id="myForm" action="ScrappingServlet" method="POST">
-        <table id="tbItems" border="1">
-            <tr>
-                <th>No.</th>
-                <th>XPath</th>
-            </tr>
-        </table><br/>
-    </form><br/>
-    <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" width="700" height="500" 
-            id="myframe" src="tmp.html">
-    </iframe>
-</p>
+        <div>
+            <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" width="700" height="500" 
+                    id="myframe" src="tmp.html" style="float:left;margin-right:10px;">
+            </iframe>
+            <form name="myForm" id="myForm" action="ScrappingServlet" method="POST"  style="float:left;">
+                <table id="tbItems" border="1" width="619">
+                    <tr>
+                        <th width="3%">No.</th>
+                        <th width="97%">XPath</th>
+                    </tr>
+                </table><br/>
+            </form><br/>
+        </div>
+
+    </p>
 </body>
 </html>
