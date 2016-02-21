@@ -57,26 +57,12 @@
             }
             
             function progressBar() {
-                $('.progress .circle').removeClass().addClass('circle');
-                $('.progress .bar').removeClass().addClass('bar');
-
                 $('.progress .circle:nth-of-type(' + step + ')').addClass('active');
-  
                 $('.progress .circle:nth-of-type(' + (step-1) + ')').removeClass('active').addClass('done');
-  
                 $('.progress .circle:nth-of-type(' + (step-1) + ') .label').html('&#10003;');
-  
                 $('.progress .bar:nth-of-type(' + (step-1) + ')').addClass('active');
-  
                 $('.progress .bar:nth-of-type(' + (step-2) + ')').removeClass('active').addClass('done');
-  
                 step++;
-  
-                if (step==0) {
-                    $('.progress .bar').removeClass().addClass('bar');
-                    $('.progress div.circle').removeClass().addClass('circle');
-                    step = 1;
-                }
             };
             
             //Get XPath from selected Element
@@ -160,8 +146,7 @@
             }
             
             function reset(){
-                col = 0; count = 0;
-                step = 0;
+                col = 0; count = 0; step = 3;
                 sessionStorage.cart = null;
                 showCart(sessionStorage.cart, 'tbItems');
             }

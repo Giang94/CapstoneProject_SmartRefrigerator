@@ -50,10 +50,15 @@ public class insertServlet extends HttpServlet {
             boolean addStep = false, addMate = false;
             if (result != -1) {
                 addStep = addStep(result, steps, null);
-                addMate = addIngre(result, 0, materials, 0, 0);
+                addMate = addIngre(result, materials, 0, 0, 0, 0);
             }
             System.out.println(addStep);
             System.out.println(addMate);
+            if(addStep && addMate){
+                response.sendRedirect("success.html");
+            } else {
+                response.sendRedirect("error.html");
+            }
             //getReturnId
         } finally {
             out.close();
@@ -107,33 +112,35 @@ public class insertServlet extends HttpServlet {
         System.out.println(steps.length);
         if (con != null) {
             for (int i = 0; i < steps.length; i++) {
-                String sql = "INSERT INTO [RecipeStep](RecipeID, StepDetail, StepImage) VALUES(?,?,?)";
-                try {
-                    stm = con.prepareStatement(sql);
-                    stm.setInt(1, recipeID);
-                    stm.setString(2, steps[i]);
-                    stm.setString(3, stepImage);
-                    int row = stm.executeUpdate();
-//                    if (row <= 0) {
-//                        return false;
-//                    }
-                    count++;
-                    if (count == steps.length) {
-                        try {
-                            if (stm != null) {
-                                stm.close();
-                            }
-                            if (con != null) {
-                                con.close();
-
-                            }
-                        } catch (SQLException ex) {
-                            Logger.getLogger(ex.getMessage());
+                count++;
+                if (!steps[i].equals("")) {
+                    String sql = "INSERT INTO [RecipeStep](RecipeID, StepDetail, StepImage) VALUES(?,?,?)";
+                    try {
+                        stm = con.prepareStatement(sql);
+                        stm.setInt(1, recipeID);
+                        stm.setString(2, steps[i]);
+                        stm.setString(3, stepImage);
+                        int row = stm.executeUpdate();
+                        if (row <= 0) {
+                            return false;
                         }
-                        return true;
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ex.getMessage());
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(ex.getMessage());
+                }
+                if (count == steps.length) {
+                    try {
+                        if (stm != null) {
+                            stm.close();
+                        }
+                        if (con != null) {
+                            con.close();
+
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ex.getMessage());
+                    }
+                    return true;
                 }
             }
         }
@@ -151,47 +158,46 @@ public class insertServlet extends HttpServlet {
 
         return false;
     }
-    
-    private boolean addIngre(int recipeID, int mateId, String[] materials, int amount, int unit){
+
+    private boolean addIngre(int recipeID, String[] materials, int mateId, int amount, int unit, int status) {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = null;
         int count = 0;
         System.out.println(materials.length);
         if (con != null) {
-            System.out.println("here");
             for (int i = 0; i < materials.length; i++) {
-                String sql = "INSERT INTO [Ingredient](RecipeID, MaterialID, IngredientName, Amount, Unit) VALUES(?,?,?,?,?)";
-                try {
-                    stm = con.prepareStatement(sql);
-                    stm.setInt(1, recipeID);
-                    stm.setInt(2, mateId);
-                    stm.setString(3, materials[i]);
-                    stm.setInt(4, amount);
-                    stm.setInt(5, unit);
-                    int row = stm.executeUpdate();
-                    System.out.println(row);
-//                    if (row <= 0) {
-//                        return false;
-//                    }
-                    count++;
-                    System.out.println("count");
-                    if (count == materials.length) {
-                        System.out.println("true");
-                        try {
-                            if (stm != null) {
-                                stm.close();
-                            }
-                            if (con != null) {
-                                con.close();
-
-                            }
-                        } catch (SQLException ex) {
-                            System.out.println(ex.toString());
+                count++;
+                if (!materials[i].equals("")) {
+                    String sql = "INSERT INTO [Ingredient](RecipeID, IngredientName, MaterialReferenceID, Amount, Unit, Status) VALUES(?,?,?,?,?,?)";
+                    try {
+                        stm = con.prepareStatement(sql);
+                        stm.setInt(1, recipeID);
+                        stm.setString(2, materials[i]);
+                        stm.setInt(3, mateId);
+                        stm.setInt(4, amount);
+                        stm.setInt(5, unit);
+                        stm.setInt(6, status);
+                        int row = stm.executeUpdate();
+                        if (row < 0) {
+                            return false;
                         }
-                        return true;
+                    } catch (SQLException ex) {
+                        System.out.println(ex.toString());
                     }
-                } catch (SQLException ex) {
-                    System.out.println(ex.toString());
+                }
+                if (count == materials.length) {
+                    try {
+                        if (stm != null) {
+                            stm.close();
+                        }
+                        if (con != null) {
+                            con.close();
+
+                        }
+                    } catch (SQLException ex) {
+                        System.out.println(ex.toString());
+                    }
+                    return true;
                 }
             }
         }
@@ -206,12 +212,11 @@ public class insertServlet extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(ex.getMessage());
         }
-        
+
         return false;
     }
-    
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP
      * <code>GET</code> method.

@@ -76,15 +76,12 @@ public class ScrappingServlet extends HttpServlet {
             content object;
             for (String xpath : xpaths) {
                 count++;
-                System.out.println(xpath + "thiendeptrai");
                 //contents[i] = (List<HtmlElement>) page.getByXPath(xpath);
                 tmp = (List<HtmlElement>) page.getByXPath(xpath);
-                System.out.println(tmp.size());
                 //tmp = (List<HtmlElement>) page.getByXPath("//div[@class='detail_ingredients col-lg-3 col-md-3 col-sm-12 col-xs-12']/ul[1]/li/span[1]");
                 String tmpString;
                 
                 for (HtmlElement data : tmp) {
-                    System.out.println(countTam);
                     countTam++;
                     if (count != 3) {
                         object = new content();
@@ -105,7 +102,6 @@ public class ScrappingServlet extends HttpServlet {
                         }
                         object.setValue(tmpString);
                         CONTENTS.add(object);
-                        System.out.println(object.getValue());
                         //contents.add(tmpString);
                     } else {
                         tmpString = data.getAttribute("src");
@@ -113,15 +109,11 @@ public class ScrappingServlet extends HttpServlet {
                         object.setKey("IMAGE");
                         object.setValue(tmpString);
                         CONTENTS.add(object);
-                        System.out.println(object.getValue());
                         //contents.add(tmpString);
                     }
                 }
             }
 
-            for (content ct : CONTENTS) {
-                System.out.println(ct.getValue());
-            }
             request.setAttribute("LIST", CONTENTS);
             RequestDispatcher rd = request.getRequestDispatcher("parseSuccess.jsp");
             rd.forward(request, response);
